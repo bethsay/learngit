@@ -1,0 +1,18 @@
+I dont want this file to be tracked.
+All commands in file1.txt were run.
+git status says file2.txt is not tracked and is highlighting it in red.
+==============================================================================
+I change my my mind and will add all files to the repo
+	#git add .
+I want to see what happens when i dont put commit message
+	#git commit
+Adding more lines.
+Vim opens and tells me to put commit message
+I can tell Git to open VScode instead of vim by adding this config
+	#git config --global core.editor "code --wait"
+	#git config --global -l
+	#git status
+	#git add .
+	#git status
+	#git commit 	<<VScode opens up. I put commit message save and close.>>
+	#git log
