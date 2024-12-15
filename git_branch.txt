@@ -1,0 +1,50 @@
+Initialise git in new working directory
+    #mkdir local_html
+    #cd local_html
+    #git init
+Create and commit empty index.html
+    #touch index.html
+    #git status
+    #git add .
+    #git commit -m "create index file"
+    #git log
+Develop index.html with VScode using "!+Tab". Save, add, commit
+    #touch index.html
+    #git status
+    #git add .
+    #git commit --help
+    #git status
+    #git commit -m "Created basic working HTML"
+    #git status
+Create and switch to nav-bar branch
+    #git branch
+    #git branch nav-bar
+    #git branch
+    #ll .git/refs/heads/
+    #cat .git/HEAD   
+    #git checkout nav-bar
+    #git branch
+    #cat .git/HEAD
+Make changes to both master and nav-bar
+    #git switch nav-bar      # gitswitch and gitcheckout does the same thing
+    #git branch
+    #touch navbar.html       # Develop code in VScode.
+    #git status
+    #git add navbar.html
+    #git commit -m "Added navbar"
+    #git log
+    #git branch
+    #git checkout master    # gitswitch and gitcheckout does the same thing
+    #ll                     # navbar.html must be missing
+    #touch products.html    # Develop code in VScode
+    #git status
+    #git add .
+    #git commit -m "Add products page"
+    #git log
+    #git branch
+    #git status
+    #git switch nav-bar      # gitswitch and gitcheckout does the same thing
+    #ll                      # products.html is missing and nav-bar.html is back
+You can create branch and switch branch with just one of these commands. any one command
+    #git switch -c feature
+    #git checkout -b bugfix

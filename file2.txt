@@ -15,4 +15,5 @@ I can tell Git to open VScode instead of vim by adding this config
 	#git add .
 	#git status
 	#git commit 	<<VScode opens up. I put commit message save and close.>>
+	#cat .git/COMMIT_EDITMSG
 	#git log
