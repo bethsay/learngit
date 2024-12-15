@@ -13,7 +13,7 @@ Zone2 : Create Zone2. Adding only file1 to Zone2
     #git add file1.txt
     #git status
 Zone2 : Other possible actions you can perform in Zone2
-Zone2 : 1.Send file1.txt back to Zone1. both works
+Zone2 : 1.Send file1.txt back to Zone1. both does the same thing
     #git rm --cached file1.txt
     #git restore --staged file1.txt
 Zone2 : 2.Edit file1.txt. Update file1.txt changes in Zone2
@@ -22,6 +22,8 @@ Zone2 : 2.Edit file1.txt. Update file1.txt changes in Zone2
 Zone2 : 3.Edit file1.txt again and forget what and why you edited. You dont want any unknown changes.
     #vim file1.txt          || Zone1 activity
     #git restore file1.txt
+Zone2 : Add every/all changes to local staging ie Zone2
+    #git add .
 Zone3 : Commit all of Zone2 into an existing Zone3
     #git commit -m "Add file1.txt and ignore file2.txt"
     #git log --oneline      || ignore --oneline for more details

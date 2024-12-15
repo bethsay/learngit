@@ -16,3 +16,12 @@ Verify
     #git status
     #ls -la .git/
     #git config -l      || -l or --list
+    #git config --system -l
+    #git config --local -l
+    #git config --global -l
+Config your identity. All Zone4 activity will be tracked with this id
+    #git config --global user.name bethsay
+    #git config --global user.email bethsay.tv@gmail.com
+If you need to use a different id for any particular repo, cd to it and 
+    #git config --local user.name bethsay_duplicate
+    #git config --local user.email bethsay@duplicate.com
