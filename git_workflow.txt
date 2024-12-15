@@ -31,16 +31,3 @@ Zone4 :
     #git push
     #git pull
     #git merge
-
-Use git to track development work only.
-Zone1 : Do not use git to track Credntaials, Keys, secrets, logs, libraries, plugins, modules, artifacts, executables.
-Zone3 : gitignore generators are available online.
-Create gitignore file in your working directory
-    #vim .gitignore
-    #git status
-    #git add .
-    #git status
-    #git log --oneline
-    #git commit -m "add default python gitignore from github"
-    #git log --oneline
-    #git merge
