@@ -5,5 +5,7 @@ I want this file to be tracked. So i run
 	#git commit -m "Add file1.txt only"
 I found an warning when running git add. But add is successful and im ignoring this
 	LF will be replaced by CRLF the next time Git touches it
-Apparently Windows and git(and all Linux) recognise EOL differently. Yet to see if this will be a problem
+Apparently Windows and git(and all Linux) recognise EOL differently.
+Found a fix
+	#git config --local core.safecrlf false
 What if i edit after commit
