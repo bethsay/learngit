@@ -1,0 +1,74 @@
+When merging, 
+source branch is must be the parameter of "git merge"
+destination or base branch is the current branch.
+
+Continuing the excercise in 04_git_branch.txt, we start of with master and nav-bar branches.
+Case1 : Master and nav-bar had their own commits before perfoming a merge. 
+            #git branch             #nav-bar and master is expected response
+            #git switch master
+            #ll                     #index.html and products.html is expected
+            #git merge nav-bar      #VScode pops-up for the merge message
+            #ll                     #index, nav-bar and products files are expected
+            #git log                #The merge is recorded as a commit with a message
+            #git lg2
+            #git branch
+        Now all files and commit history from nav-bar are now available on master branch.
+        As all planned activity on nav-bar is completed lets delete the branch.
+        Also delete any stale or unused branches
+            #git branch -d nav-bar feature bugfix
+        Branch Deletion is not logged. 
+        Branch deletion also deletes records of it HEAD that was visible in "git log" and in file ".git/refs/heads/nav-bar"
+            #git log
+
+Case2 : Master has no commits but footer branch has a commit before perfoming a merge
+            #git checkout -b footer         #Create and switch to footer branch
+            #code footer.html
+                ->footer>lorem10            #Activate this Emmet abbrev in VScode with TAB
+            #git add footer.html
+            #git commit -m "added footer content in footer branch"
+            #git lg
+            #git switch master
+            #git merge footer -m "Merge footer branch with master"
+            #git log
+            #ll
+        Now all files and commit history from footer are now available on master branch.
+        The merge message gets ignored as there were no master commits after the footer commit and before the merge
+
+Case3 : Merge Conflict caused by master and footer commiting changes on same file
+            #git switch footer
+            #ll
+            #code index.html
+                ->add some text in <p> block
+            #git status
+            #git add index.html
+            #git commit -m "modified index.html in footer branch"
+            #git switch master
+            #code index.html
+                ->add different text in <p> block
+            #git status
+            #git add index.html
+            #git commit -m "updated index file in master"
+            #git lg
+            #git branch
+            #git merge footer -m "merge footer with master"                         #Merge message gets ignored due to failure
+                ->CONFLICT (content): Merge conflict in index.html
+                ->Automatic merge failed; fix conflicts and then commit the result.
+            #git lg
+            #vim index.html
+        Open index.html file for editing.
+        You will find lines that identical stays as is.
+        Git will highlight the conflicting lines with seperators
+            #vim index.html
+                -><<<<<<< HEAD                          #Seperator line added by git. Conflicting lines fount at HEAD commit of base branch start below
+                ->change commited in master
+                ->=======                               #Seperator line added by git. base branch conflicts end above. source branch conflicts start below
+                ->change commited in footer branch
+                ->>>>>>>> footer                        #Seperator line added by git. footer branch conflicts end above
+        Review the discrepancies. You may keep the content as is or overwrite all of it.
+        Remove all 3 sperator lines and save the file.
+            #git status
+            #git add index.html
+            #git status
+            #git lg
+            #git commit -m "resolved merge conflict that came when merging footer with master"
+            #git lg
