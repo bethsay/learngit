@@ -53,8 +53,29 @@ Git log will show commit history of current branch.
 To view commit history of all branches
     #git log --all --decorate --oneline --graph         #https://stackoverflow.com/questions/1057564/pretty-git-branch-graphs "git-log-a-dog"
     #git lg         #git lg2                            #Requires alias lg in ~/.gitconfig. Find "lg" in 01_git_firststeps.txt
-You can create branch and switch branch with just one of these commands. any one command
-    #git switch -c feature
-    #git checkout -b bugfix
 We could leave nav-bar and master as is or we can Merge both branches.
 Merging instructions will be in next file.
+
+You can create branch and switch branch with just one of these commands.
+    #git switch master
+    #git switch -c feature
+    #git checkout -b bugfix
+You can delete empty and merged branches.
+Branch creation and deletion will not be tracked by "git log". only commits made in branches are tracked
+    #git branch -d feature bugfix
+    #git log
+If the branch has commits yet to be merged, you will need to you the force delete option
+    #git checkout -b practice-delete
+    #git branch
+    #touch empty.practice
+    #git status
+    #git add empty.practice
+    #git commit -m "Added an empty file to practice-delete branch"
+    #git log
+    #git switch master
+    #git lg
+    #git branch -d practice-delete
+    #git branch -D practice-delete
+    #git log
+    #ll
+    #git branch
