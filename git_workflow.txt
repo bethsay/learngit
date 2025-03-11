@@ -28,6 +28,9 @@ Zone3 : Commit all of Zone2 into an existing Zone3
     #git commit -m "Add file1.txt and ignore file2.txt"
     #git log --oneline      || ignore --oneline for more details
 Zone4 : 
+    #git remote -v
+    #git remote add repo2_sameproject https://github.com/user/repo
+    #git fetch
     #git push
     #git pull
     #git merge

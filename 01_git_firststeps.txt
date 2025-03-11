@@ -1,0 +1,34 @@
+Do you have git installed?
+Open cli/cmd/gitbash/poweshell
+    #git --version
+
+Git will track everything that happens in git repo.
+Where are you? Is you current path/location/folder/directory a git repo or not?
+    #pwd
+    #git status
+If you see error/fatal message, you are not in a git repo
+
+Create new git repo
+    #mkdir local_gitproject
+    #cd local_gitproject
+    #git init
+Verify
+    #git status
+    #ls -la .git/
+    #git config -l      || -l or --list
+    #git config --system -l
+    #git config --local -l
+    #git config --global -l
+Config your identity. All Zone4 activity will be tracked with this id
+    #git config --global user.name bethsay
+    #git config --global user.email bethsay@personal.com
+    #cat ~/.gitconfig
+If you need to use a different id for any particular repo, cd to it and 
+    #git config --local user.name bethsay_business
+    #git config --local user.email bethsay@business.com
+When working with branches, the lg1 and lg2 alias show time and owner of commit
+    #vim ~/.gitconfig                        #Credit: https://stackoverflow.com/users/177525/slipp-d-thompson
+        ->[alias]
+        ->    lg1 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+        ->    lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+        ->    lg = lg1

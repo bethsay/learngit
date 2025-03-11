@@ -1,0 +1,60 @@
+Initialise git in new working directory
+    #mkdir local_html
+    #cd local_html
+    #git init
+Create and commit empty index.html
+    #touch index.html
+    #git status
+    #git add .
+    #git commit -m "create index file"
+    #git log
+Commit code to index.html
+    #code index.html
+        ->html:5            #Activate this Emmet abbrev in VScode with TAB to generate a block of code
+    #git status
+    #git add .
+    #git status
+    #git commit -m "Created basic working HTML"
+    #git log
+Create nav-bar branch and switch into it 
+    #git branch                     #list branches
+    #git branch nav-bar             #create branch
+    #git branch
+    #ll .git/refs/heads/            #all branches are listed as files. Each file contains a commit_id
+    #cat .git/HEAD                  #current branch
+    #git checkout nav-bar           #switch branch
+    #git branch
+    #cat .git/HEAD
+Make changes within nav-bar branch
+    #code navbar.html
+        ->nav>ul>li*4               #Activate this Emmet abbrev in VScode with TAB to generate list with 4 items
+    #git status
+    #git add navbar.html
+    #git commit -m "Added navbar.html in nav-bar branch"
+    #git log --oneline
+Switch back to master branch and make changes
+    #git checkout master            #git-switch and git-checkout can be used to switch branches
+    #ls -l                          #navbar.html must be missing
+    #code products.html             #Develop code in VScode
+        ->section>h1>lorem10^p>lorem30      #Activate this Emmet abbrev in VScode with TAB
+    #git status
+    #git add .
+    #git commit -m "Added products page in master branch"
+    #git log --oneline
+Observe the HEAD pointer and how its tracked in .git/
+Within a git folder, you cannot work on different branches at the same time
+    #git switch nav-bar                     #git switch master                  #git-switch and git-checkout can be used to switch branches
+    #ls -la                                 #ls -la                             #nav-bar branch contains index,navbar files. master branch contains index, products files.
+    #git branch                             #git branch
+    #cat .git/HEAD                          #cat .git/HEAD                      #must match previous output
+    #git log                                #git log                            #observe the commit that has HEAD and branch_name
+    #cat .git/refs/heads/nav-bar            #cat .git/refs/heads/master         #must match commit_id 
+Git log will show commit history of current branch.
+To view commit history of all branches
+    #git log --all --decorate --oneline --graph         #https://stackoverflow.com/questions/1057564/pretty-git-branch-graphs "git-log-a-dog"
+    #git lg         #git lg2                            #Requires alias lg in ~/.gitconfig. Find "lg" in 01_git_firststeps.txt
+You can create branch and switch branch with just one of these commands. any one command
+    #git switch -c feature
+    #git checkout -b bugfix
+We could leave nav-bar and master as is or we can Merge both branches.
+Merging instructions will be in next file.

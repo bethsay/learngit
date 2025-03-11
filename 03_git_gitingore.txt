@@ -1,0 +1,31 @@
+Use git to track development work only.
+Zone1 : Do not use git to track Credntaials, Keys, secrets, logs, libraries, plugins, modules, artifacts, executables.
+Zone3 : gitignore generators are available online.
+Create gitignore file in your working directory
+    #vim .env
+        ->local data not to be tracked by git
+    #touch file3.txt file4.txt
+    #vim dummy.key
+        ->sensitive data not to be tracked by git
+    #mkdir sensitive_folder
+    #touch sensitive_folder/.env sensitive_folder/creds.key
+    #git status                                                         #you will see 6 untracked files
+    #vim .gitignore
+        ->#Comments
+        ->.env
+        ->*.key
+        ->#filenames are ignored irrespective of relative path
+        ->#wildcards and other regex are allowed
+    #git status                                                         #you should see file3 and file4 only
+    #git add .
+    #mkdir not_project/
+    #touch not_project/file1.txt not_project/file2.txt not_project/some.key
+    #git status                                                         #you will see 2 more untracked files
+    #vim .gitignore
+        ->not_project/
+        ->#To ignore all content within not_project folder
+    #git status                                                         #no untracked files
+    #git log --oneline
+    #git commit -m "add .gitignore, and empty file3 and file4"
+    #git log --oneline
+    #git merge
