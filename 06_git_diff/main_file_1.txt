@@ -1,0 +1,23 @@
+    #mkdir local_learngitdiff
+    #cd local_learngitdiff
+    #git init
+    #touch main_file_1.txt
+    #code
+    #git add main_file_1.txt
+    #git commit -m "Inital commit with 7 lines"
+These 7 lines are my first commit that i want before trying git diff. <Save file>
+    #git diff           #staging data [-VS+] working_dir data.
+                        #Zone2 [-VS+] Zone1
+4 lines were added and file is saved again.
+    #git diff           #Zone2 [-VS+] Zone1
+If you see "\^M" at the end of each line in output of git diff, add the config in local or system
+    #git config --local core.whitespace cr-at-eol
+I can see lines 8-13 in output. Now i will git add.
+    #git add main_file_1.txt
+    #git diff           #empty. Zone2 [-VS+] Zone1
+    #git diff --cached  #latest commit data [-VS+] staging data.
+    #git diff --staged  #Zone3 [-VS+] Zone2.
+    #git diff HEAD      #latest commit data [--VS++] staging and working_dir data
+                        #shows all changed that will be commited when you run #git commit -a
+                        #Zone3 [--VS++] Zone1+Zone2
+    #git commit -a -m "second commit with 22 lines"

@@ -1,0 +1,25 @@
+git diff is used to check differnce of a file across commits.
+    #git diff <param1> <param2> -- <path>       -> param1, param2, path are optional
+The response, contains below elements for each file in path
+    ->diff --git a/path b/path.                 #This is the expansion of git diff. param1 replaced by 'a' and param2 replaced by 'b'.
+    ->index 5975fd4..a94f1fa 100644.            #indexing used by git and the permission of the file
+    ->---a/path.                                #Every element of param1/path will start with minus(-)
+    ->+++b/path.                                #Every element of param2/path will start with plus(+)
+    ->@@ -ln1,ln2 +ln3,ln4 @@.                  #snippet between ln1 and ln2 of param1/path are found to be conflicting with snippet between ln3 and ln4 of param2/path.
+    #Lines starting with (-) are found in param1/path but not in param2/path. In git bash, the text font is red
+    #Lines starting with (+) are found in param2/path but not in param1/path. In git bash, the text font is green
+    #Lines without +/- and in default font are are common.
+Examples :
+    #git diff                                   ->staging data [-VS+] working_dir data
+    #git diff --cached                          ->latest commit [-VS+] staging data
+    #git diff --staged                          ->latest commit [-VS+] staging data
+    #git diff HEAD                              ->latest commit [-VS+] staging & workdir
+    #git diff branch_name                       ->latest commit of <branch_name> [-VS+] staging & workdir
+    #git diff <branch1> <branch2>               ->latest commit of <branch1> [-VS+] latest commit of <branch2>
+    #git diff <branch1>..<branch2>              ->latest commit of <branch1> [-VS+] latest commit of <branch2>
+    #git diff <branch1>..<branch2> -- <file>    ->latest commit of <file> in <branch1> [-VS+] latest commit of <file> in <branch2>
+    #git diff <branch1>...<branch2>             ->branching commit of <branch1> [-VS+] latest commit of <file> in <branch2>
+    #git diff <commit1> <commit2>               ->data in <commit1> [-VS+] data in <commit2>
+    #git diff <commit1>...<commit2>             ->data in branch point prior to <commit1> [-VS+] data in <commit2>
+    #git diff <commit1>...<commit2> -- <file>   ->content of <file> in branch point prior to <commit1> [-VS+] content of <file> in <commit2>
+Check the contents of the git_diff folder to see how these were used in a local_repo

@@ -1,0 +1,80 @@
+This file was created to check view git diff across branches.
+Save file
+    #git diff               ->empty
+    #git diff --cached      ->empty
+    #git diff head          ->empty
+No output in any git diff as it will not work on untracked files.
+    #git add branched_file_1.txt
+    #git diff               ->empty. Zone2 [-VS+] Zone1. staging and workdir are the same
+    #git diff --cached      ->got output. Zone3 [-VS+] Zone2. commit doesnt have this file.
+    #git diff HEAD          ->got output. Zone3 [-VS+] Zone2+Zone1. commit [-VS+] staging+workdir
+    #git commit -m "added new file to see diff across branches"
+Edit and Save file
+    #git diff               ->got output. Zone2 [-VS+] Zone1.
+    #git diff --cached      ->empty. Zone3 [-VS+] Zone2. staging and latest commit are the same.
+    #git diff HEAD          ->got output. Zone3 [-VS+] Zone2+Zone1
+Git add file.               ->git diff output same as previous git add
+Git commit file.            ->all git diff outputs are empty
+    #git add branched_file_1.txt
+    #git commit -m "added couple more lines to branched_file"
+    #git log --oneline
+--------------------------------------------------------------------------------------------------------------------------------------------
+Create branch.
+    #git switch -c diffcheck
+Edit and save file within branch diffcheck
+    #git diff               ->got output. Zone2 [-VS+] Zone1.
+    #git diff --cached      ->empty. Zone3 [-VS+] Zone2. staging and latest commit are the same.
+    #git diff head          ->got output. Zone3(current) [-VS+] Zone2+Zone1... latest commit of current branch [-VS+] staging+workdir
+    #git diff diffcheck     ->got output. Zone3(diffcheck) [-VS+] Zone2+Zone1. latest commit of diffcheck branch [-VS+] staging+workdir
+    #git diff main          ->got output. Zone3(main) [-VS+] Zone2+Zone1...... latest commit of main branch [-VS+] staging+workdir.
+Git add
+    #git add branched_file_1.txt
+    #git diff               ->empty.
+    #git diff --cached      ->got output. Zone3 [-VS+] Zone2
+    #git diff head          ->got output. Zone3(current) [-VS+] Zone2+Zone1
+    #git diff diffcheck     ->got output. Zone3(diffcheck) [-VS+] Zone2+Zone1
+    #git diff main          ->got output. Zone3(main) [-VS+] Zone2+Zone1
+Git commit
+    #git commit -a -m "added lines to branched while in diffcheck"
+    #git diff               ->empty
+    #git diff --cached      ->empty
+    #git diff head          ->empty
+    #git diff diffcheck     ->empty. Zone3(diffcheck) [-VS+] Zone2+Zone1
+    #git diff main          ->got output. Zone3(main) [-VS+] Zone2+Zone1
+Once more git commit before switching to main.
+    #git commit -a -m "finished checking git diff in diffcheck. next changes in main branch"
+    #git lg                 ->custom log command. requires alias in ~/.gitconfig to work
+--------------------------------------------------------------------------------------------------------------------------------------------
+    #git branch
+    #git switch main
+After commiting changes in diffcheck, commiting content in main branch. Save file
+    #git diff head              ->to see all changes that would be commited when running "git commit -a"
+    #git commit -a -m "changes in file branched, while in main, after working on diffcheck"
+    #git diff                   ->empty
+    #git diff --cached          ->empty
+    #git diff head              ->empty. Zone3(current) [-VS+] Zone2+Zone1
+    #git diff main              ->empty. Zone3(main) [-VS+] Zone2+Zone1
+    #git diff diffcheck         ->Zone3(diffcheck) [-VS+] Zone2+Zone1. latest commit of diffcheck branch [-VS+] staging+workdir
+    #git diff diffcheck head    ->Zone3(diffcheck) [-VS+] Zone2+Zone1
+    #git diff diffcheck..main   ->Zone3(diffcheck) [-VS+] Zone3(main). latest commit of diffcheck [-VS+] latest commit of main
+    #git diff diffcheck...main  ->Zone3(diffcheck at branch split) [-VS+] Zone3(main). branching commit of diffcheck [-VS+] latest commit of main
+    #git diff head..diffcheck   ->Zone2+Zone1 [-VS+] Zone3(diffcheck). staging+workdir [-VS+] latest commit of diffcheck
+    #git diff main diffcheck    ->Zone3(main) [-VS+] Zone3(diffcheck). latest commit of main [-VS+] latest commit of diffcheck
+    #git diff main...diffcheck  ->Zone3(main at branch split) [-VS+] Zone3(diffcheck). branching commit of main [-VS+] latest commit of diffcheck
+Save file.
+Once more git commit before merging.
+    #git commit -a -m "finished checking git diff in main. next changes after merge"
+--------------------------------------------------------------------------------------------------------------------------------------------
+    #git merge diffcheck -m "Merging diffcheck to master"
+Conflicts are present in branched_file_1.txt.
+Edit the file, Accepts both changes, correct the order of content, save file.
+    #git commit -a -m "Merged diffcheck to master. conflicts were fixed."
+    #git lg     #git lg2
+    #git diff main...diffcheck          ->empty. After merge main no longer has branching point.
+    #git diff diffcheck...main          ->branching commit of diffcheck [-VS+] latest commit of main
+To see differences between commits, copy both commit_id from log and paste them in the git diff
+    #git lg
+    #git <commit_id1> <commit_id2>      ->files(commit_id1) [-VS+] files(commit_id2).
+If the both commit_ids have branching and no merging.
+    #git diff <commit_id1>...<commit_id2>    ->files(older commit which caused commit_id1 to be a branch) [-VS+] files(commit_id2)
+    #git diff <commit_id2>...<commit_id1>    ->files(older commit which caused commit_id2 to be a branch) [-VS+] files(commit_id1)
