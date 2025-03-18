@@ -1,0 +1,44 @@
+
+
+
+git stash is used to save a draft of staged and unstaged work and revert state of all files to last commit
+you can have multiple stash at a time. stash is storred as a stack, ie, LIFO 
+git switch -c bugfix
+vim products
+no adding no commiting
+try and fail git switch footer or main
+git branch
+git stash = git stash push = git stash save would do the same thing, but it is depreceated
+git stash list
+git stash show
+try git switch footer or main
+git switch bugfix
+vim products
+git stash pop = git stash apply + git stash drop
+the stash gets dropped from the list
+git stash -m "product wip temp"
+vim navbar
+git stash -m "navbar wip"
+git stash show
+git stash list
+git stash pop --index 1
+git stash -m "navbar wip"
+git stash branch navbar 1   Use this when there is a merge conflict
+Creates and checks out a new branch starting from the commit at which the stash was originally created, 
+then applies the changes recorded in stash to the new working tree
+git branch
+git status
+git switch main
+git stash drop 1
+git stash clear
+if there is a conflict between files in stash with any in the staging, git stash will abort
+resolve this conflict by stashing the current workdir and poping the one you want to use. Then again, you will need to address this stash some other time
+resolve this conflict by either creating new branch with that stash. Work on that branch, and the manage the conflicts when you do a git merge
+or perform commit in current branch and run stash pop again
+git stash commit -a -m "message"
+git stash pop
+Edit the file where git merge said there is a conflict
+git status
+git add
+git commit
+When merge conflict is there or any error happens, stash-pop does not do a stash-drop. it must be done manually
