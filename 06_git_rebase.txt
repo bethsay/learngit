@@ -1,0 +1,79 @@
+When you need to update your the code in your working branch, rebasing is an option.
+Rebasing is almost always done on your working branch or temp branch, never on a common branch or main branch.
+Rebasing re-writes the commit history or your branch by pre-pending it with commits(from common-ancestor to latest) of the source branch.
+After a successful rebase, it will appear as if you had created the branch after the latest commit of source branch.
+After a successful rebase and you are ready to submit the work and delete the branch, you may merge/push it to main/common branch. If you do, it will be a fast-forward merge.
+The commit history at main/common branch will be clean and linear as if were a hotfix or as if you were directly working on the common branch.
+    #cd local_html
+    #git branch
+        ->No branches other than master
+    #git branch -c experiment
+    #ll
+    #nvim
+        ->Modify index.html and navbar.html
+    #git status
+    #git add .
+    #git commit -m "Added experimental content into index and a new block in nav-bar"
+    #git lg
+    #git switch master
+    #nvim
+        ->Modify index and products. Different from experiment content
+    #git status
+    #git commit -a -m "Added new product info into index and products"
+    #git lg
+    #nvim
+        ->Modify navbar.html. Different from experiment content
+    #git status
+    #git commit -a -m "Added products to navbar"
+    #git lg
+    #git switch experiment
+    #nvim
+        ->More content in index. Create experiment.html with content
+    #git add .
+    #git commit -m "Updated index and created experiment.html"
+    #git lg
+So now we have made 2 commits each in experiment and master branch
+    #git branch
+        ->You must be on experiment branch. If not, then switch to it
+    #git rebase master
+Rebase wount fail because of conflict. It will stop untill you fix index, navebar and other conflicts.
+    #git status
+    #git lg
+        ->Will show as divergent branches
+    #git rebase --continue
+        ->Reminder to fix the conflicts
+    #nvim
+        ->Resolve the conflicting sections in index and navbar
+    #git status
+    #git add .
+    #git status
+    #git rebase --continue
+Now rebase is successful and complete
+    #git status
+    #git lg
+        ->No divergence
+        ->All commits of experiment branch are after the latest commit of master.
+Let add one more commit to master. After which we will rebase it experiment branch again.
+    #git switch master
+    #nvim
+        ->Update index.html
+    #git status
+    #git commit -a -m "Added navbar to index"
+    #git status
+    #git lg
+        ->Will show as divergent branches
+    #git switch experiment
+    #git lg
+    #git rebase master
+    #git lg
+        ->No more divergence
+    #git status
+Let finish up. Lets merge experiment to master and delete the branch
+    #git switch master
+    #git branch
+    #git lg
+    #git merge experiment
+Merging a rebased branch is almost always a fast-forward merge
+    #git lg
+    #git branch -d experiment
+    #git branch

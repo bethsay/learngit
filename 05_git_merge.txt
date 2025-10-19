@@ -1,9 +1,14 @@
-When merging, 
-source branch is must be the parameter of "git merge"
-destination or base branch is the current branch.
-
-Continuing the excercise in 04_git_branch.txt, we start of with master and nav-bar branches.
-Case1 : Master and nav-bar had their own commits before perfoming a merge. 
+When merging,
+    source branch is must be the parameter of "git merge"
+    destination or base branch is the current branch.
+In most cases (Case1 and Case2), its a three-way merge between 3 snapshots.
+All the objects of the latest commit of the source branch, base branch and the most common ancestor of the 2 branches are combined to create a new snapshot.
+This snapshot becomes a commit in the base branch.
+If the snapshot gets created automatically without conflict, merge message is used as commit message.
+If there is a merge conflict, the snapshot is loaded into the workdir for you to review and fix. After fixing you need to git add and git commit(with message).
+Continuing from the excercise in 04_git_branch.txt, we start of with master and nav-bar branches.
+Case1 : Master and nav-bar had their own commits before perfoming a merge.
+            #cd local_html
             #git branch             #nav-bar and master is expected response
             #git switch master
             #ll                     #index.html and products.html is expected
@@ -16,11 +21,11 @@ Case1 : Master and nav-bar had their own commits before perfoming a merge.
         As all planned activity on nav-bar is completed lets delete the branch.
         Also delete any stale or unused branches
             #git branch -d nav-bar feature bugfix
-        Branch Deletion is not logged. 
+        Branch Deletion is not logged.
         Branch deletion also deletes records of it HEAD that was visible in "git log" and in file ".git/refs/heads/nav-bar"
             #git log
 
-Case2 : Master has no commits but footer branch has a commit before perfoming a merge
+Case2 : Master has no commits but footer branch has a commit before perfoming a merge. This is called "fast-forward" merge
             #git checkout -b footer         #Create and switch to footer branch
             #code footer.html
                 ->footer>lorem10            #Activate this Emmet abbrev in VScode with TAB
@@ -32,7 +37,8 @@ Case2 : Master has no commits but footer branch has a commit before perfoming a 
             #git log
             #ll
         Now all files and commit history from footer are now available on master branch.
-        The merge message gets ignored as there were no master commits after the footer commit and before the merge
+        The merge message gets ignored as this was a fast-forward merge, ie, there were no master commits after the footer commit and before the merge
+        Typically, the branch is deleted after work is done. We will do it after the next case.
 
 Case3 : Merge Conflict caused by master and footer commiting changes on same file
             #git switch footer
@@ -71,4 +77,9 @@ Case3 : Merge Conflict caused by master and footer commiting changes on same fil
             #git status
             #git lg
             #git commit -m "resolved merge conflict that came when merging footer with master"
+            #git lg
+            #git branch
+        Now all files and commits from footer branch are now merged onto master branch and no other changes are expected, lets cleanup
+            #git branch -d footer
+        Branch Deletion is not logged. 
             #git lg

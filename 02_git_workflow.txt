@@ -8,6 +8,10 @@ Zone1 : Enter Zone1
     #cd local_gitproject
     #vim file1.txt
     #vim file2.txt
+Zone1 : Each branch is its own workdir
+    #git branch
+    #git checkout branch_name         #Add -b flag if branch_name has to be created.
+    #git switch branch_name           #Add -c flag if branch_name has to be created.
 Zone2 : Create Zone2. Adding only file1 to Zone2
     #git status
     #git add file1.txt
@@ -26,11 +30,39 @@ Zone2 : Add every/all changes to local staging ie Zone2
     #git add .
 Zone3 : Commit all of Zone2 into an existing Zone3
     #git commit -m "Add file1.txt and ignore file2.txt"
-    #git log --oneline -n 3             #--oneline for each commit log to be summarized to single line. -n for 
-Zone4 : 
+    #git log --oneline -n 3             #--oneline for each commit log to be summarized to single line. -n 3 for latest 3 commits.
+Zone3 : Branch Merge creates a new commit to import latest content from branch_name
+    #git merge branch_name -m "Branch_name is merged with current_branch_name"
+Zone3 : Branch rebase imports the the unique/divergent commits from branch_name into current_branch_name
+    #git rebase branch_name
+Zone4 :
+    #git remote -h
     #git remote -v
-    #git remote add repo2_sameproject https://github.com/user/repo
-    #git fetch
+    #git clone https://github.com/myname/my-repo.git
+        ->Same as #git remote add origin https://github.com/myname/my-repo.git
+    #git remote add repo2_sameproject https://github.com/user/repo.git
+    #git remote show origin
+    #git remote show repo2_sameproject
+    #git fetch repo2_sameproject
+        ->This fetches the latest git trackings from repo2_sameproject. Your Zone1 workdir is unaffected.
+        ->This allows you to run #git diff commands to see how your Zone1 is different from Zone4.
+        ->To update your Zone1 content with that from Zone4, then run #git merge repo2_sameproject/branch_name
+    #git pull repo2_sameproject branch_name
+        ->(git pull) = (git fetch) + (git merge)
+    #git pull --rebase repo2_sameproject branch_name
+        ->(git pull) = (git fetch) + (git rebase) + (git merge)
+    #git push repo2_sameproject branch_name
+Zone4: Installing GitHub cli and using it as auth helper
+    #apt info gh && apt install gh
+    #gh auth status
+        ->Check if you are logged in
+    #gh auth login
+        ->For interactive login
+    #gh auth login --with-token < github_pat.key
+        ->If you have the right PAT in a file.
+        ->or you could paste your token in place of "< github_pat.key"
+    #gh auth status
+    #gh auth setup-git
+        ->gh sets itself as your credntaial helper into you git config
+    #git clone https://github.com/myname/my-repo.git
     #git push origin main
-    #git pull
-    #git merge
