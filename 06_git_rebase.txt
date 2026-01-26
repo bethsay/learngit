@@ -3,10 +3,11 @@ Rebasing is almost always done on your working branch or temp branch, never on a
 Rebasing re-writes the commit history or your branch by pre-pending it with commits(from common-ancestor to latest) of the source branch.
 After a successful rebase, it will appear as if you had created the branch after the latest commit of source branch.
 After a successful rebase and you are ready to submit the work and delete the branch, you may merge/push it to main/common branch. If you do, it will be a fast-forward merge.
-The commit history at main/common branch will be clean and linear as if were a hotfix or as if you were directly working on the common branch.
+The commit history at main/common branch will be clean and linear as if it were a hotfix or as if you were directly working on the common branch.
     #cd local_html
     #git branch
         ->No branches other than master
+Create a new branch and make changes.
     #git branch -c experiment
     #ll
     #nvim
@@ -15,6 +16,7 @@ The commit history at main/common branch will be clean and linear as if were a h
     #git add .
     #git commit -m "Added experimental content into index and a new block in nav-bar"
     #git lg
+Switch back to main and make 2 commits.
     #git switch master
     #nvim
         ->Modify index and products. Different from experiment content
@@ -26,6 +28,7 @@ The commit history at main/common branch will be clean and linear as if were a h
     #git status
     #git commit -a -m "Added products to navbar"
     #git lg
+Switch back to branch 'experiment' and make a commit
     #git switch experiment
     #nvim
         ->More content in index. Create experiment.html with content
@@ -33,10 +36,11 @@ The commit history at main/common branch will be clean and linear as if were a h
     #git commit -m "Updated index and created experiment.html"
     #git lg
 So now we have made 2 commits each in experiment and master branch
+Lets perform a rebase on branch 'experiment'
     #git branch
         ->You must be on experiment branch. If not, then switch to it
     #git rebase master
-Rebase wount fail because of conflict. It will stop untill you fix index, navebar and other conflicts.
+Rebase would fail because of conflict. It will stop until you fix index, navebar and other conflicts.
     #git status
     #git lg
         ->Will show as divergent branches
@@ -52,8 +56,8 @@ Now rebase is successful and complete
     #git status
     #git lg
         ->No divergence
-        ->All commits of experiment branch are after the latest commit of master.
-Let add one more commit to master. After which we will rebase it experiment branch again.
+All commits of experiment branch are after the latest commit of master.
+Let add one more commit to master. After which we will rebase branch 'experiment' to it again.
     #git switch master
     #nvim
         ->Update index.html
@@ -62,18 +66,20 @@ Let add one more commit to master. After which we will rebase it experiment bran
     #git status
     #git lg
         ->Will show as divergent branches
+Perform Rebase
     #git switch experiment
     #git lg
     #git rebase master
     #git lg
         ->No more divergence
     #git status
-Let finish up. Lets merge experiment to master and delete the branch
+Let finish up. Lets merge experiment to master.
     #git switch master
     #git branch
     #git lg
     #git merge experiment
 Merging a rebased branch is almost always a fast-forward merge
+Lets cleanup and delete the branch
     #git lg
     #git branch -d experiment
     #git branch
