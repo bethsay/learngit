@@ -29,3 +29,15 @@ Create gitignore file in your working directory
     #git commit -m "add .gitignore, and empty file3 and file4"
     #git log --oneline
     #git merge
+
+If your git must track configuration files that will never have sensitive data,
+You might need the values in your local be different from remote.
+    #git update-index --skip-worktree app.config
+    #git ls-file -t | grep ^S
+Now any changes you make to the local app.config will not be tracked by git add, commit or push.
+If you do a git pull and app.config is different, pull will fail with the message "you have uncommited changed"
+    Unset the flag: git update-index --no-skip-worktree <file-path>.
+    Stash your local data: git stash.
+    Pull the remote changes: git pull.
+    Restore your data: git stash pop and resolve any merge conflicts if necessary.
+    Re-set the flag: git update-index --skip-worktree <file-path>. 
