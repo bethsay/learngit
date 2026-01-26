@@ -8,7 +8,7 @@ Where are you? Is you current path/location/folder/directory a git repo or not?
     #git status
 If you see error/fatal message, you are not in a git repo
 
-Create new git repo
+Create new git repo on your local system
     #mkdir local_gitproject
     #cd local_gitproject
     #git init
@@ -16,14 +16,28 @@ Verify
     #git status
     #ls -la .git/
     #git config -l      || -l or --list
+    #git branch
+The first branch would be named 'master'. You may rename it to 'main' or something else
+    #git branch -m master main
+You can configure your repo to initialise with 'main' branch or some other name
+    #git config --global init.defaultBranch main
+    #git config -l
+If you want to remove a config you created
+    #git config --global --get init.defaultBranch
+    #git config --global --uset init.defaultBranch
+    #git config --global --get init.defaultBranch
+    #git config -l
+Configuration can be set at local, global and system level. Final config is a merge of all.
     #git config --system -l
     #git config --local -l
     #git config --global -l
-Config your identity. All Zone4 activity will be tracked with this id
+The scope for local is only the current git repo, for global is all repos of current user,
+and for system is for all repos of all user on the current system.
+Configure your identity. All Zone4 activity will be tracked with this id
     #git config --global user.name bethsay
     #git config --global user.email bethsay@personal.com
     #cat ~/.gitconfig
-If you need to use a different id for any particular repo, cd to it and 
+If you need to use a different id for any particular repo, cd to it and
     #git config --local user.name bethsay_business
     #git config --local user.email bethsay@business.com
 When working with branches, the lg1 and lg2 alias show time and owner of commit
