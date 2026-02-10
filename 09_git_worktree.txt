@@ -1,0 +1,53 @@
+Git Worktree allows you to work on 2 branches at the same time.
+In senarios where you are working on a branch but need to refer and copy code from another branch
+    #mkdir local_learngitworkspace
+    #cd local_learngitworkspace
+    #git init
+    #touch first.txt
+    #git add first.txt && git commit -m "Initial commit"
+    #git status && git log
+    #git switch -c work_branch
+    #touch second.txt && rm first.txt
+    #git add second.txt && git commit -m "Initial commit in work_branch"
+    #git status && git log
+    #git switch main
+    #git branch -a
+We now have main branch with a single empty file first.txt  and 1 commit
+and also a  work_branch with a single empty file second.txt and 2 commits that has not been merged into main
+
+Case 1 : You are going to continue work on the EXISTING work_branch
+    #git branch -a
+    #git switch work_branch
+But you realise you need to refer/copy code from a source branch like main
+    #git switch main
+Set a folder named active_workdir outside your main workdir as folder to be used as a worktree of work_branch
+    #git worktree add ../active_workdir work_branch
+        ->This creates the folder ../active_workdir with branch code/files in it.
+    #git worktree list
+    #git branch -a
+    #ll && ll ../active_workdir
+    #cat .git/worktrees/active_workdir
+    #cat ../active_workdir/.git
+At the moment, the repo local_learngitworkspace holds the files of its main branch. This would be the case after a "git clone" as well
+But the files of the same repo (different branch) is also present in an external folder along with other project files.
+If your source/main workdir has the same name as the repo, and If the use of git worktree will be frequent
+    #cd ../ && mv <repo_name> main
+    #mkdir <repo_name> && mv main <repo_name> && mv active_workdir <repo_name>
+    #cd <repo_name>/main && git worktree repair && git worktree repair ../active_workdir
+    #git worktree list
+    #cat .git/worktrees/active_workdir
+    #cat ../active_workdir/.git
+    #cd ../active_workdir
+Now you will start working in your "linked worktree" while the "main worktree" is available for reference
+Cleanup. After the changes made are committed and pushed and if the worktree is no longer needed.
+    #git worktree remove ../active_workdir
+
+Case 2 : You are going to start work in an NEW branch called throwaway_branch
+    #git worktree add ../throwaway_branch
+    #git branch -a
+    #git worktree list
+    #cd ../throwaway_branch
+The linked worktree throwaway_branch is now available for development.
+Cleanup. After the changes made are committed, pushed or merged and the worktree is no longer needed.
+    #git worktree --remove ../throwaway_branch
+    #git branch -d throwaway_branch

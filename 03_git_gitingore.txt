@@ -40,4 +40,4 @@ If you do a git pull and app.config is different, pull will fail with the messag
     Stash your local data: git stash.
     Pull the remote changes: git pull.
     Restore your data: git stash pop and resolve any merge conflicts if necessary.
-    Re-set the flag: git update-index --skip-worktree <file-path>. 
+    Re-set the flag: git update-index --skip-worktree <file-path>

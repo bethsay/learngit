@@ -16,7 +16,7 @@ Commit code to index.html
     #git status
     #git commit -m "Created basic working HTML"
     #git log
-Create nav-bar branch and switch into it 
+Create nav-bar branch and switch into it
     #git branch                     #list branches
     #git branch nav-bar             #create branch
     #git branch

@@ -1,5 +1,5 @@
 git diff is used to check differnce of a file across commits.
-    #git diff <param1> <param2> -- <path>       -> param1, param2, path are optional
+    #git diff <param1> <param2> -- <path>       -> param1, param2, and path are optional
 The response, contains below elements for each file in path
     ->diff --git a/path b/path.                 #This is the expansion of git diff. param1 replaced by 'a' and param2 replaced by 'b'.
     ->index 5975fd4..a94f1fa 100644.            #indexing used by git and the permission of the file
