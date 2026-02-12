@@ -1,44 +1,76 @@
-
-
-
-git stash is used to save a draft of staged and unstaged work and revert state of all files to last commit
-you can have multiple stash at a time. stash is storred as a stack, ie, LIFO 
-git switch -c bugfix
-vim products
-no adding no commiting
-try and fail git switch footer or main
-git branch
-git stash = git stash push = git stash save would do the same thing, but it is depreceated
-git stash list
-git stash show
-try git switch footer or main
-git switch bugfix
-vim products
-git stash pop = git stash apply + git stash drop
+Git Stash is used to record all uncommited changes, cleanup the working tree, and revert back to HEAD state, ie last commit.
+This allows us to avoid expected errors with branches, pulls, merges and rebase, caused by uncommited code.
+Uncommited code includes both workdir code and staging/index code (ie Zone1 and Zone2)
+We can manage multiple stashes within our repo. These stashes are stored as a stack, ie, LIFO
+Lets re-use the local_html repo used for branch, merge and rebase
+    #cd local_html
+    #git branch
+Expecting all previous branches have been deleted, lets created a new unstable branch
+    #git switch -c unstable
+    #vim products.html
+        ->Remove all paragraph blocks
+    #git add products.html && git commit -m "Removed data from products.html"
+Switch back to master branch of the repo
+    #git switch master
+    #vim products.html
+        ->Add a paragraph block
+As the products file had been modified and committed in unstable branch, and
+as we have uncommited changes in products file, git will block switching to unstable or merging unstable to master
+    #git switch unstable
+    #git diff unstable master -- products.html
+    #git diff unstable -- products.html
+    #git add products.html
+    #git switch unstable
+You will still be allowed to switch a branch if there is no overlap between uncommited files in current branch and committed files in destination branch
+Now, let stash the code
+    #git branch
+        ->We are still on master as the above git switch had aborted
+    #git stash
+        ->Same as #git stash push -m "WIP on <branch_name>: <commit-id> <commit-message>"
+    #git stash list
+    #git stash show
+        ->Same as #git stash show 0
+There exists a "git stash save" command, which is deprecated in favour of "git stash push"
+Now that we have stashed all uncommited code, our working tree has been reset and we can git switch.
+    #git status
+    #git switch unstable
+    #git stash list
+The stashed code is available to be applied into any branch. Lets apply it to unstable branch
+    #git branch
+        ->We are on unstable branch
+    #git stash pop
+        ->Same as #git stash pop 0
+        ->Same as #git stash apply 0 && git stash drop 0
+As there is a merge conflict during stash pop, stash does not get dropped.
+The stash is retained and would be available for a later applies or pop.
+    #vim products
+        ->Resolve the merge conflict.
+    #git stash drop 0
+        ->Re-running #git stash pop, can also drop the stash.
 the stash gets dropped from the list
-git stash -m "product wip temp"
-vim navbar
-git stash -m "navbar wip"
-git stash show
-git stash list
-git stash pop --index 1
-git stash -m "navbar wip"
-git stash branch navbar 1   Use this when there is a merge conflict
+    #git stash -m "product wip temp"
+    #vim navbar
+    #git stash -m "navbar wip"
+    #git stash show
+    #git stash list
+    #git stash pop --index 1
+    #git stash -m "navbar wip"
+    #git stash branch navbar 1   Use this when there is a merge conflict
 Creates and checks out a new branch starting from the commit at which the stash was originally created, 
 then applies the changes recorded in stash to the new working tree
-git branch
-git status
-git switch main
-git stash drop 1
-git stash clear
-if there is a conflict between files in stash with any in the staging, git stash will abort
+    #git branch
+    #git status
+    #git switch main
+    #git stash drop 1
+    #git stash clear
+if there is a conflict between files in stash with any in the index, git stash will abort
 resolve this conflict by stashing the current workdir and poping the one you want to use. Then again, you will need to address this stash some other time
 resolve this conflict by either creating new branch with that stash. Work on that branch, and the manage the conflicts when you do a git merge
 or perform commit in current branch and run stash pop again
-git stash commit -a -m "message"
-git stash pop
-Edit the file where git merge said there is a conflict
-git status
-git add
-git commit
+    #git stash commit -a -m "message"
+    #git stash pop
+    #Edit the file where git merge said there is a conflict
+    #git status
+    #git add
+    #git commit
 When merge conflict is there or any error happens, stash-pop does not do a stash-drop. it must be done manually

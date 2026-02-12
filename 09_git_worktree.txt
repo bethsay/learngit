@@ -1,13 +1,13 @@
 Git Worktree allows you to work on 2 branches at the same time.
-In senarios where you are working on a branch but need to refer and copy code from another branch
+In scenarios where you are working on a branch but need to refer and copy code from another branch
     #mkdir local_learngitworkspace
     #cd local_learngitworkspace
     #git init
-    #touch first.txt
+    #echo first > first.txt
     #git add first.txt && git commit -m "Initial commit"
     #git status && git log
     #git switch -c work_branch
-    #touch second.txt && rm first.txt
+    #echo second > second.txt && rm first.txt
     #git add second.txt && git commit -m "Initial commit in work_branch"
     #git status && git log
     #git switch main
@@ -16,6 +16,7 @@ We now have main branch with a single empty file first.txt  and 1 commit
 and also a  work_branch with a single empty file second.txt and 2 commits that has not been merged into main
 
 Case 1 : You are going to continue work on the EXISTING work_branch
+    #cd local_learngitworkspace
     #git branch -a
     #git switch work_branch
 But you realise you need to refer/copy code from a source branch like main
@@ -26,28 +27,93 @@ Set a folder named active_workdir outside your main workdir as folder to be used
     #git worktree list
     #git branch -a
     #ll && ll ../active_workdir
-    #cat .git/worktrees/active_workdir
+    #cat .git/worktrees/active_workdir/gitdir
     #cat ../active_workdir/.git
-At the moment, the repo local_learngitworkspace holds the files of its main branch. This would be the case after a "git clone" as well
-But the files of the same repo (different branch) is also present in an external folder along with other project files.
-If your source/main workdir has the same name as the repo, and If the use of git worktree will be frequent
-    #cd ../ && mv <repo_name> main
-    #mkdir <repo_name> && mv main <repo_name> && mv active_workdir <repo_name>
-    #cd <repo_name>/main && git worktree repair && git worktree repair ../active_workdir
-    #git worktree list
-    #cat .git/worktrees/active_workdir
+At the moment, the main_worktree exists in a folder that uses the repo name. This would be the case after a "git clone" as well.
+But the linked_worktree exists with an arbitrary folder along side main_worktree and other code repositories.
+If you think you will need worktrees regularly when working on the branches, it would be nice if all worktrees existed as child_folders of the repo
+Lets re-organise the folder structure.
+    #cd ../ && mv local_learngitworkspace/ main/
+    #mkdir local_learngitworkspace && mv main/ local_learngitworkspace/ && mv active_workdir/ local_learngitworkspace/
+    #cd local_learngitworkspace/main && git worktree list
+    #git worktree repair && git worktree repair ../active_workdir && git worktree list
+    #cat .git/worktrees/active_workdir/gitdir
     #cat ../active_workdir/.git
     #cd ../active_workdir
-Now you will start working in your "linked worktree" while the "main worktree" is available for reference
+Now you will start working in your "linked_worktree" while the "main_worktree" is available for reference
 Cleanup. After the changes made are committed and pushed and if the worktree is no longer needed.
     #git worktree remove ../active_workdir
 
+---git worktree move, repair, remove, prune, lock, unlock---
+When path of main_worktree has been modified, run below command to re-connect all linked_worktree.
+    #cd <path-main_worktree>
+    #git worktree repair
+To modify path of linked_worktree, use
+    #cd <path-main_worktree or path-linked_worktree>
+    #git worktree move <current_path-linked_worktree> <destination_path-linked_worktree>
+    #cat .git/worktrees/<og-linked_worktree>/gitdir
+    #cat <destination_path-linked_worktree>/.git
+When path of any linked_worktree has been modified, not by git, run below command to re-connect it to main_worktree.
+    #cd <path-linked_worktree>
+    #git worktree repair
+When path of main_worktree and linked_worktree has been modified, "git worktree repair" will not work from linked_worktree.
+    #cd <path-main_worktree>
+    #git worktree list
+    #git worktree repair
+    #git worktree repair <path-linked_worktree>
+    #git worktree list
+To delete linked_worktree. The branch of the linked_worktree will not be affected
+    #git worktree list
+    #git worktree remove <path-linked_worktree>
+When path to linked_worktree has been deleted, not by git, it becomes stale and requires cleanup
+    #git worktree list
+    #git worktree prune
+If path to linked_worktree is unstable, or can be misunderstood as stale, it requires prune protection.
+    #git worktree lock --reason "Network Location" <path-linked_worktree>
+    #git worktree list
+If path to locked linked_worktree has been deleted and requires prune cleanup
+    #git worktree unlock <path-linked_worktree>
+    #git worktree list
+    #git worktree prune
+------------------------------------------------------------
+
 Case 2 : You are going to start work in an NEW branch called throwaway_branch
+    #cd local_learngitworkspace/main
     #git worktree add ../throwaway_branch
+        ->This creates the folder ../throwaway_branch and a branch named throwaway_branch code/files in it.
+        ->For a custom new branch_name use the flag "-b new_branch" prior to the linked_worktree name
     #git branch -a
     #git worktree list
     #cd ../throwaway_branch
-The linked worktree throwaway_branch is now available for development.
+The linked_worktree throwaway_branch is now available for development.
 Cleanup. After the changes made are committed, pushed or merged and the worktree is no longer needed.
     #git worktree --remove ../throwaway_branch
     #git branch -d throwaway_branch
+
+Case 3 : You are going to start some experimental work in an NEW branch called experiment_branch.
+For the experiment, you want to start fresh, without any code from any branch of the repo.
+This requires a fresh start, without any files, or commit history from any branches of the repo
+    #cd local_learngitworkspace/main
+    #git worktree add --orphan ../experiment_branch
+    #git branch -a
+        ->For orphan branches to be tracked, at least one commit must exist to which the branch HEAD can be linked to.
+    #git worktree list
+    #cd ../experiment_branch
+    #echo thrid > third.txt
+    #git add third.txt && git commit -m "Initial commit in experiment_branch"
+    #git status && git log
+    #cd ../main && git branch -a
+The purpose of experiment_branch would be try some concept and maintain it just for reference.
+If one day the experimental code becomes a plugin that is compatible with code in a branch like main.
+And you and team have decided to merge it to main.
+    #cd local_learngitworkspace/main
+    #git merge experiment_branch -m "<message>" --allow-unrelated-histories
+        ->"<message>" = "Inducting experimental plugin, that has passed code scans and test, into main code base"
+Cleanup. After the changes made are committed, pushed or merged and the worktree is no longer needed.
+    #git worktree --remove ../experiment_branch
+    #git branch -d experiment_branch
+
+To create new orphan branches without worktrees
+    #git checkout --orphan <new-branch_name>
+    #git switch --orphan <new-branch_name>
+These branches will not exist, will not be tracked untill their first commit.

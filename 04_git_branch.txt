@@ -72,6 +72,7 @@ If the branch has commits yet to be merged, you will need to you the force delet
     #git add empty.practice
     #git commit -m "Added an empty file to practice-delete branch"
     #git log
+Branch deletion also deletes records of it HEAD that was visible in "git log" and in file ".git/refs/heads/practice-delete"
     #git switch master
     #git lg
     #git branch -d practice-delete

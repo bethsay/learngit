@@ -1,5 +1,5 @@
 When you need to update your the code in your working branch, rebasing is an option.
-Rebasing is almost always done on your working branch or temp branch, never on a common branch or main branch.
+Rebasing is typically done on your working branch or temp branch, never on a common branch or main branch.
 Rebasing re-writes the commit history or your branch by pre-pending it with commits(from common-ancestor to latest) of the source branch.
 After a successful rebase, it will appear as if you had created the branch after the latest commit of source branch.
 After a successful rebase and you are ready to submit the work and delete the branch, you may merge/push it to main/common branch. If you do, it will be a fast-forward merge.
@@ -78,7 +78,7 @@ Let finish up. Lets merge experiment to master.
     #git branch
     #git lg
     #git merge experiment
-Merging a rebased branch is almost always a fast-forward merge
+Merging a rebased branch is typically a fast-forward merge
 Lets cleanup and delete the branch
     #git lg
     #git branch -d experiment
