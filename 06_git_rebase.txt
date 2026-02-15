@@ -40,7 +40,7 @@ Lets perform a rebase on branch 'experiment'
     #git branch
         ->You must be on experiment branch. If not, then switch to it
     #git rebase master
-Rebase would fail because of conflict. It will stop until you fix index, navebar and other conflicts.
+Rebase would fail because of conflict. It will stop until you fix index, navbar and other conflicts.
     #git status
     #git lg
         ->Will show as divergent branches

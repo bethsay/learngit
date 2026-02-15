@@ -22,55 +22,100 @@ as we have uncommited changes in products file, git will block switching to unst
     #git add products.html
     #git switch unstable
 You will still be allowed to switch a branch if there is no overlap between uncommited files in current branch and committed files in destination branch
-Now, let stash the code
+Now, lets modify navbar, create a temp.html, not indexed either of them and stash both files.
     #git branch
         ->We are still on master as the above git switch had aborted
+    #vim navbar.html
+        ->Add a list item
+    #echo "throwaway" > temp.html
+    #git status
     #git stash
-        ->Same as #git stash push -m "WIP on <branch_name>: <commit-id> <commit-message>"
     #git stash list
     #git stash show
-        ->Same as #git stash show 0
+    #git stash pop
+    #git add products.html
+    #git stash push -um "Minor changes in products and navbar along with untracked temp.html"
+    #git stash list
+    #git stash shown -uv 0
 There exists a "git stash save" command, which is deprecated in favour of "git stash push"
 Now that we have stashed all uncommited code, our working tree has been reset and we can git switch.
     #git status
     #git switch unstable
     #git stash list
-The stashed code is available to be applied into any branch. Lets apply it to unstable branch
-    #git branch
-        ->We are on unstable branch
-    #git stash pop
-        ->Same as #git stash pop 0
-        ->Same as #git stash apply 0 && git stash drop 0
-As there is a merge conflict during stash pop, stash does not get dropped.
-The stash is retained and would be available for a later applies or pop.
-    #vim products
-        ->Resolve the merge conflict.
-    #git stash drop 0
-        ->Re-running #git stash pop, can also drop the stash.
-the stash gets dropped from the list
-    #git stash -m "product wip temp"
-    #vim navbar
-    #git stash -m "navbar wip"
-    #git stash show
+A stash push, will extract only the tracked files of Zone1 and Zone2. The below flags can adjust the scope.
+    ->avoid '-p' flag. push patching requires interactive review and approval for stashing each file.
+    ->flag '-S' stashes only indexed code, ie, excludes Zone1, ie, same scope of a commit
+    ->flag '-k' stashes only workdir code, ie, excludes Zone2. Indexed code and untracked files stay on current branch
+    ->flag '-u' stashes both tracked (Zone1 and Zone2) and untracked files.
+    ->flag '-a' includes -u and gitignored files
+    ->flag '-m <message>' allows you to set a descriptive message about the files you have stashed.
+    ->flag '-- <path1> <path2>' stashes only specified files. Only tracked files can be listed. All other flags must precede '--'
+A stash show, only outputs details of indexed and tracked files.
+    ->flag '-u' will show untracked files details as well.
+    ->The default stash number is 0, ie, the latest stash
+
+Case1 : After stashing the code, we switch to a unstable branch for some imaginary work.
+    #git switch unstable
+We return back to master branch, lets retrive the stashed code without dropping it from stash list
+    #git switch master
+    #git stash apply --index
+    #git status
     #git stash list
-    #git stash pop --index 1
-    #git stash -m "navbar wip"
-    #git stash branch navbar 1   Use this when there is a merge conflict
-Creates and checks out a new branch starting from the commit at which the stash was originally created, 
-then applies the changes recorded in stash to the new working tree
+    #git stash show -uv
+You should see products, navbar and temp in staging, workdir and untracked respectively.
+A stash apply, will merge a copy of all code from a stash into workdir
+    ->flag '--index' will re-stage the files that had were in the index during the stash push
+    ->The default stash number is 0, ie, the latest stash
+Lets stash it again so that we can check other cases.
+    #git stash -u
+    #git stash list
+Our "Minor changes" stash now exists as stash 1 and we just pushed the same content/code as stash 0.
+Lets delete the latest duplicate stash.
+    #git stash drop
+    #git stash list
+If you are trying to delete/drop the non-latest stash, stash number must be provided in stash drop command.
+Use "git stash drop 1" for the second-to-last stash, "git stash drop 2" for the thrid-to-last stash, and so on.
+
+Case2 : The stashed code is available to be applied into any branch. Lets apply it to unstable branch
+    #git switch unstable
+    #git stash pop --index
+    #git stash pop
+    #git status
+A stash pop, is same as "stash apply && stash drop". Running stash pop applies/merges latest stash into unstable branch.
+And because there is a merge conflict, ie, stash apply didnt exit with 0,
+stash drop will not run and the stash remains available for later use.
+For the same reason, flag --index failed because Zone2 cannot accept files with unresolved code conflict
+When you want to pop the non-latest stash, stash number must be provided in stash pop command.
+Lets resolve the merge conflict in products file
+    #vim products.html
+        ->Resolve the merge conflict by removing the conflict markers
+        ->top marker of HEAD : "<<<<<<< Updated upstream"
+        ->bottom marker of Stash : ">>>>>>> Stashed changes"
+        ->top bottom Seperator : "======="
+    #git add . && git commit -m "Recovered code from master branch stash"
+Now unstable branch recovered the deleted code and addition code developed from the master branch
+Also, stash pop didnt drop the stash as there was a conflict. Lets reuse it for one more case.
+
+Case3 : You stash code into master, forgot about it. The master branch moves forward by many commits.
+When you remember you stash, you realise that if you try to pop/apply,
+you solely will have to deal with merge conflicts between an old stash and the latest commit.
+You can get help from teammates when dealing with merge conflicts between branches.
+OR, The team has a policy to not allow commits in master. Only merges from other branches are allowed.
+But the code you had built, run, and tested were in master branch of your local copy.
+So you stash all the code you created in the master branch.
+For both Case3 situations, it would be great if the stashed code existed on a branch of its own.
+    #git stash branch mystash
     #git branch
     #git status
-    #git switch main
-    #git stash drop 1
-    #git stash clear
-if there is a conflict between files in stash with any in the index, git stash will abort
-resolve this conflict by stashing the current workdir and poping the one you want to use. Then again, you will need to address this stash some other time
-resolve this conflict by either creating new branch with that stash. Work on that branch, and the manage the conflicts when you do a git merge
-or perform commit in current branch and run stash pop again
-    #git stash commit -a -m "message"
-    #git stash pop
-    #Edit the file where git merge said there is a conflict
-    #git status
-    #git add
-    #git commit
-When merge conflict is there or any error happens, stash-pop does not do a stash-drop. it must be done manually
+"stash branch" creates a new branch with the commit that was the base during stash push.
+Git switches/checksout to that branh and a "stash pop" is run on it.
+When you want to create a stash branch with the non-latest stash, stash number must be provided after branch_name.
+    #git add . && git commit -m "Code from master branch stash"
+
+Now that we have seen all 3 cases, lets merge mystash to unstable and then unstable to master.
+    #git switch unstable
+    #git merge mystash -m "Merging from stash branch containing master code"
+    #git switch master
+    #git merge unstable -m "Resolved missing code from unstable branch"
+Lets cleanup and delete the stale branches
+    #git branch -d unstable mystash

@@ -8,7 +8,7 @@ If the snapshot gets created automatically without conflict, merge message is us
 If there is a merge conflict, the snapshot is loaded into the workdir for you to review and fix. After fixing you need to git add and git commit(with message).
 Continuing from the excercise in 04_git_branch.txt, we start of with master and nav-bar branches.
 
-Case1 : Master and nav-bar had their own commits before perfoming a merge.
+Case1 : Master and nav-bar had their own commits before performing a merge.
     #cd local_html
     #git branch             #nav-bar and master is expected response
     #git switch master
@@ -26,7 +26,7 @@ Branch Deletion is not logged.
 Branch deletion also deletes records of it HEAD that was visible in "git log" and in file ".git/refs/heads/nav-bar"
     #git log
 
-Case2 : Master has no commits but footer branch has a commit before perfoming a merge. This is called "fast-forward" merge
+Case2 : Master has no commits but footer branch has a commit before performing a merge. This is called "fast-forward" merge
     #git checkout -b footer         #Create and switch to footer branch
     #code footer.html
         ->footer>lorem10            #Activate this Emmet abbrev in VScode with TAB
