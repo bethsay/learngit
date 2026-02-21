@@ -1,0 +1,57 @@
+I had to migrate the orphan branch "gha/deploy" from the repo "terraform"
+To a newly created repo "github-actions"
+
+The easiest method would have been
+    ->clone "github-actions" repo outside terraform folder
+    ->copy all files and folder from the "gha/deploy" branch of "terraform" repo to the cloned folder
+    ->git add, commit and push
+    ->Maybe cleanup by deleting "gha/deploy" branch
+But it would cost you all commit history of the branch
+
+What I did instead was as below
+I was using using worktrees for terraform repo.
+The folder "terraform/main" was for "main" branch and folder "terraform/github-actions" for the orphan branch "gha/deploy"
+Created new repo in github with the name "github-actions"
+    #cd terraform/github-actions
+    #git status
+        ->On branch gha/deploy. Working tree clean.
+        ->If you have changes that have not been commited, then git add, commit and push
+    #git log -n 4
+    #git remote -v
+    #git remote add origin2 https://github.com/bethsay/github-actions.git
+        ->Adding new remote affects the repo, not the branch.
+    #git remote -v
+        #cd ../main && git remote -v && cd ../github-actions
+    #git pull origin2 main --allow-unrelated-histories --ff
+        ->fetches content from main branch of origin2 and then performs fast-forward merge between fetched branch and current branch
+        ->instead of -ff, you can use --rebase, --squash
+    #git lg -n 8
+    #git push origin2 gha/deploy:main
+        #push commits of "gha/deploy" branch of local to "main" branch of origin2
+        #"gha/deploy" could have been replaced with "HEAD", as long as current branch was "gha/deploy"
+    #git lg -n 8
+    #git remote remove origin2
+    #git remote -v
+I ensured code and commit history is available on github.com
+    #cd ../../
+    #git clone https://github.com/bethsay/github-actions.git
+    #git status && git lg
+
+Now that branch has been migrated, Lets Cleanup.
+    #cd terraform/github-actions
+    #rm -r ./*
+    #git status
+    #git commit -am "Migrated to new repo. Emptying branch, Merging with main and Deleting branch"
+    #cd ../main
+    #git worktree list
+    #git worktree remove ../github-actions/
+    #git merge gha/deploy --allow-unrelated-histories
+    #git branch
+    #git branch -d gha/deploy
+    #git remote -v
+    #git push
+    #git lg -n 10
+    #cd ../../
+    #mv terraform terraform-tmp
+    #mv terraform-tmp/main terraform
+    #rm -r terraform-tmp
