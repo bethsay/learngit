@@ -1,6 +1,11 @@
 Do you have git installed?
-Open cli/cmd/gitbash/poweshell
+Open terminal/konsole/gitbash
     #git --version
+On Ubuntu, To get the latest stable version,
+    #add-apt-repository ppa:git-core/ppa
+    #apt update && apt install git
+On Windows, this powershell command will install the latest gitbash terminal
+    #winget install --id Git.Git -e --source winget
 
 Git will track everything that happens in git repo.
 Where are you? Is you current path/location/folder/directory a git repo or not?
