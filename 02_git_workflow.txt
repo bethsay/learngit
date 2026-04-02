@@ -52,13 +52,39 @@ Zone4 :
     #git pull --rebase repo2_sameproject branch_name
         ->(git pull) = (git fetch) + (git rebase) + (git merge)
     #git push repo2_sameproject branch_name
-Zone4: Setting up ssh authentication
-    #git config user.email
-    #ssh-keygen -t ed25519 -C "$(!-1)"
+Zone4: Setting up ssh authentication. Works with any git based version control
     #ssh-keygen -t ed25519 -C "email@org.com"
-    
-
-Zone4: Installing GitHub cli and using it as auth helper
+        ->Adding comment is not mandatory for remote git connection.
+        ->You may also add other identifiers like "Name - email - laptop/VM - date"
+        #git config user.email
+        #ssh-keygen -t ed25519 -C "$(!-1)"
+    #ssh-add -l
+        ->If no keys are have been added you will see "The agent has no identities."
+        ->If ssh-agent is not running you will see "Could not open a connection to your authentication agent."
+            #eval "$(ssh-agent -s)"         #Start agent
+            #ps aux | grep ssh-agent
+            #pgrep -u "$USER" ssh-agent
+            #eval "$(ssh-agent -k)"         #Kill agent
+            #pgrep -u "$USER" ssh-agent
+                ->If agent is still running
+                #kill -9 $(!-1)
+    #ssh-add                    
+        ->Add all ssh keys(id_*) from ~/.ssh
+        ->For ssh key in non-default location 
+            #ssh-add /path/to/pvtkey
+        ->To drop a key added by the agent
+            #ssh-add -d /path/to/privatekey
+        ->To add a key for 1 hour
+            #ssh-add -t 1h /path/to/privatekey
+        ->To drop all keys managed by current session of agent
+            #ssh-add -D
+    #cat ~/.ssh/id_ed25519.pub
+        ->Copy the public key.
+        ->On browser, login to https://github.com/settings/keys
+        ->Paste public key
+    #git clone git@github.com:myname/my-repo.git
+Zone4: Setting up https authentication with github PAT https://github.com/settings/personal-access-tokens
+Install GitHub cli and use it as auth helper. Works only for github repos
     #apt info gh && apt install gh
     #gh auth status
         ->Check if you are logged in
@@ -72,4 +98,3 @@ Zone4: Installing GitHub cli and using it as auth helper
         ->gh sets itself as your credntaial helper into you git config
     #git clone https://github.com/myname/my-repo.git
     #git push origin main
-
