@@ -52,6 +52,12 @@ Zone4 :
     #git pull --rebase repo2_sameproject branch_name
         ->(git pull) = (git fetch) + (git rebase) + (git merge)
     #git push repo2_sameproject branch_name
+Zone4: Setting up ssh authentication
+    #git config user.email
+    #ssh-keygen -t ed25519 -C "$(!-1)"
+    #ssh-keygen -t ed25519 -C "email@org.com"
+    
+
 Zone4: Installing GitHub cli and using it as auth helper
     #apt info gh && apt install gh
     #gh auth status
@@ -66,3 +72,4 @@ Zone4: Installing GitHub cli and using it as auth helper
         ->gh sets itself as your credntaial helper into you git config
     #git clone https://github.com/myname/my-repo.git
     #git push origin main
+

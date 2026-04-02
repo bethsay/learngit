@@ -29,7 +29,7 @@ You can configure your repo to initialise with 'main' branch or some other name
     #git config -l
 If you want to remove a config you created
     #git config --global --get init.defaultBranch
-    #git config --global --uset init.defaultBranch
+    #git config --global --unset init.defaultBranch
     #git config --global --get init.defaultBranch
     #git config -l
 Configuration can be set at local, global and system level. Final config is a merge of all.
