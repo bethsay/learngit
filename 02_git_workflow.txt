@@ -52,38 +52,9 @@ Zone4 :
     #git pull --rebase repo2_sameproject branch_name
         ->(git pull) = (git fetch) + (git rebase) + (git merge)
     #git push repo2_sameproject branch_name
-Zone4: Setting up ssh authentication. Works with any git based version control
-    #ssh-keygen -t ed25519 -C "email@org.com"
-        ->Adding comment is not mandatory for remote git connection.
-        ->You may also add other identifiers like "Name - email - laptop/VM - date"
-        #git config user.email
-        #ssh-keygen -t ed25519 -C "$(!-1)"
-    #ssh-add -l
-        ->If no keys are have been added you will see "The agent has no identities."
-        ->If ssh-agent is not running you will see "Could not open a connection to your authentication agent."
-            #eval "$(ssh-agent -s)"         #Start agent
-            #ps aux | grep ssh-agent
-            #pgrep -u "$USER" ssh-agent
-            #eval "$(ssh-agent -k)"         #Kill agent
-            #pgrep -u "$USER" ssh-agent
-                ->If agent is still running
-                #kill -9 $(!-1)
-    #ssh-add                    
-        ->Add all ssh keys(id_*) from ~/.ssh
-        ->For ssh key in non-default location 
-            #ssh-add /path/to/pvtkey
-        ->To drop a key added by the agent
-            #ssh-add -d /path/to/privatekey
-        ->To add a key for 1 hour
-            #ssh-add -t 1h /path/to/privatekey
-        ->To drop all keys managed by current session of agent
-            #ssh-add -D
-    #cat ~/.ssh/id_ed25519.pub
-        ->Copy the public key.
-        ->On browser, login to https://github.com/settings/keys
-        ->Paste public key
-    #git clone git@github.com:myname/my-repo.git
-Zone4: Setting up https authentication with github PAT https://github.com/settings/personal-access-tokens
+
+Zone4: Setting up https authentication 
+With github PAT https://github.com/settings/personal-access-tokens
 Install GitHub cli and use it as auth helper. Works only for github repos
     #apt info gh && apt install gh
     #gh auth status
@@ -98,3 +69,77 @@ Install GitHub cli and use it as auth helper. Works only for github repos
         ->gh sets itself as your credntaial helper into you git config
     #git clone https://github.com/myname/my-repo.git
     #git push origin main
+
+Zone4: Setting up ssh authentication. 
+Works with all remote git providers (github, bitbucket, gitlab)
+Allows for multi-account and multi-provider authentication.
+    #ssh-add -l
+        ->If no keys are have been added you will see "The agent has no identities."
+        ->If ssh-agent is not running you will see "Could not open a connection to your authentication agent."
+            #eval "$(ssh-agent -s)"         #Start ssh agent
+            #ps aux | grep ssh-agent
+            #pgrep -u "$USER" ssh-agent
+            #eval "$(ssh-agent -k)"         #Kill ssh agent
+            #pgrep -u "$USER" ssh-agent
+                ->If agent is still running
+                #kill -9 $(!-1)
+If you have existing keys, you could use them.
+But lets create a keypair to be used exclusively for remote git operations.
+    #git config user.email
+    #ssh-keygen -t ed25519 -C "$(!-1)" -f ~/.ssh/id_ed25519_github_personal
+        ->Do not overwrite an existing key. Ctrl+c, change the flag -f "/path/file" and re-run.
+        ->The flag -C "comment" is not checked for remote git connection. Its just for you to identify the purpose.
+        ->You could include other identifiers like "Name - email - laptop/VM - date" as comment
+        ->Use a passphrase for your key.
+You can create multiple keys to be used in different remote git providers.
+Adding keys to your ssh agent can allow system to remember the passphrase for some time or untill session is closed.
+    #ssh-add
+        ->Add all ssh keys(id_*) from ~/.ssh
+        ->To add ssh key from non-default location into agent
+            #ssh-add /path/to/pvtkey
+        ->To drop a key available with the agent
+            #ssh-add -d /path/to/privatekey
+        ->To add a key for 1 hour
+            #ssh-add -t 1h /path/to/privatekey
+        ->To drop all keys managed by current session of agent
+            #ssh-add -D
+Upload the public key to github.com
+    #cat ~/.ssh/id_ed25519.pub
+        ->Copy the public key.
+        ->On browser, login to https://github.com/settings/keys
+        ->Paste public key
+Test contectivity to github.com
+    #ssh -vT git@github.com
+    #git clone git@github.com:myname/my-repo.git
+If you have already cloned a public repo with https, and you want to switch to ssh authentication
+You will need to update its remote origin url.
+    #cd /path/my-repo/
+    #git remote -v
+    #git remote set-url origin git@github.com:myname/my-repo.git
+If you perform git operation with with multiple keys/accounts/providers, you need to update alias/Hosts in ~/.ssh/config
+    #vim ~/.ssh/config
+        ->Host github-personal
+        ->    HostName github.com
+        ->    User git
+        ->    IdentityFile /home/user/.ssh/id_ed25519_github_personal
+        ->    IdentitiesOnly yes
+        ->Host github-business
+        ->    HostName provider.org
+        ->    User git
+        ->    Port 443
+        ->    IdentityFile /home/user/.ssh/id_ed25519_github_business
+        ->    IdentitiesOnly yes
+If you skip 'IdentitiesOnly' ssh may cycle through all ssh-agent keys and default keys causing auth failure.
+Some proxies/firewalls/git-providers may block 22. So open ssh via https port or their custom port.
+Test connection with
+    #ssh -vT -p 443 git@provider.org
+    #ssh -vT github-business
+Although the ssh config allows you to skip specifing the ssh user, Follow the standards of git command and always use it.
+You also need to update the remote urls of each repo.
+    #cd /path/personal-repo/
+    #git remote -v
+    #git remote set-url origin git@github.com:myname/my-repo.git
+    #cd /path/business-repo/
+    #git remote -v
+    #git remote set-url origin git@provider.org:mybusiness/my-project.git
+If the config is ready before you have cloned the repo, replace the provider.com when copying the clone command from remote git provider
